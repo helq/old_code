@@ -1,0 +1,6 @@
+https://visibleearth.nasa.gov/view.php?id=73934
+https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73934/gebco_08_rev_elev_21600x10800.png
+https://visibleearth.nasa.gov/view.php?id=73909
+https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73909/world.topo.bathy.200412.3x5400x2700.png
+https://commons.wikimedia.org/wiki/Category:Images_of_map_projections
+https://commons.wikimedia.org/wiki/File:Equirectangular_projection_SW.jpg

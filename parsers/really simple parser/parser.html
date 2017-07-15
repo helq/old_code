@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <script src="code.js"></script>
+    </head>
+
+    <body>
+
+        <header>
+            <h1>Simple Lexer and Parser for "Polish Notation"</h1>
+        </header>
+
+
+        <section class="input">
+            <article class="input-form">
+                <form id="tryitform" name="tryitform">
+                    <textarea id="textareaCode" wrap="logical" rows="10" cols="50"></textarea>
+                </form>
+                <button type="button" onclick="parsing()">Parse</button>
+            </article>
+            <article>
+                <h3>Lexical analysis</h3>
+                <div id="lexical">execute something</div>
+            </article>
+        </section>
+        <section class="tree">
+            <article>
+                <h3>Parsing</h3>
+                <div id="parse-tree">execute something</div>
+
+                <!-- TOOD: very important -->
+                <div id="parse-tree-graphic"></div>
+            </article>
+        </section>
+
+
+
+        <script>
+        function parsing() {
+            var plain = document.getElementById('textareaCode').value;
+            var l = lexer(plain);
+            if (l instanceof Array) {
+                document.getElementById("lexical").innerHTML = "["+l+"]";
+                p = parser(l);
+                document.getElementById("parse-tree").innerHTML = p;
+            } else {
+                document.getElementById("lexical").innerHTML = "error, '"+l+"' is not a token";
+                document.getElementById("parse-tree").innerHTML = "";
+            }
+        }
+        </script>
+
+    </body>
+</html>

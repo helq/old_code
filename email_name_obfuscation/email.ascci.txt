@@ -1,0 +1,29 @@
+│     │     ┌──┐  │o            │
+├─┐┌─┐│┌─┐  │┌╖│  │╷╷  ╷┌─┐   ┌─┤┌─┐
+│ │├─┘││ │  │└╨┘  ││└┐┌┘├─┘   │ │├─┘
+╵ ╵└─╴╵└─┤  └─┘   ╵╵ └┘ └─╴ o └─┘└─╴
+         ┼
+
+
+
+│     │          │ o               │
+├─┐┌─┐│┌─┐  ┌─┐  │ ┬ ┬  ┬┌─┐     ┌─┤┌─┐
+│ │├─┘││ │  │└┘  │ │ └┐┌┘├─┘     │ │├─┘
+┴ ┴└─┘┴└─┤  └──  ┴ ┴  └┘ └─┘  o  └─┘└─┘
+         ┼
+
+              _
+|_  _ | _    / \   | o     _       _| _
+| |(/_|(_|  | a_)  | | \/ (/_  o  (_|(/_
+         |   \__ 
+
+  ,,                   ,,                                        ,,    ,,                                        ,,           
+`7MM                 `7MM                      ,.-==-.         `7MM    db                                      `7MM           
+  MM                   MM                   ,pd'      `g.        MM                                              MM           
+  MMpMMMb.   .gP"Ya    MM    ,dW"Yvd       ,P   ,dMb.A  Y.       MM  `7MM  `7M'   `MF' .gP"Ya               ,M""bMM   .gP"Ya  
+  MM    MM  ,M'   Yb   MM   ,W'   MM      ,P   dP  ,MP  j8       MM    MM    VA   ,V  ,M'   Yb            ,AP    MM  ,M'   Yb 
+  MM    MM  8M""""""   MM   8M    MM      8:  dM'  dM   d'       MM    MM     VA ,V   8M""""""            8MI    MM  8M"""""" 
+  MM    MM  YM.    ,   MM   YA.   MM      Wb  YML.dML..d'        MM    MM      VVV    YM.    ,     ,,     `Mb    MM  YM.    , 
+.JMML  JMML. `Mbmmd' .JMML.  `MbmdMM       Wb  ``""^`"'        .JMML..JMML.     W      `Mbmmd'     db      `Wbmd"MML. `Mbmmd' 
+                                  MM        `M..     .,!                                                                      
+                                .JMML.        `Ybmmd'  

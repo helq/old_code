@@ -1,0 +1,39 @@
+[title b
+| b<-books
+, a<-authors b
+  startWith a "Bird"
+]
+
+concatMap (\b-> [title b| a<-authors b, startWith a "Bird" ]) books 
+
+
+[title a| a<-authors b, startWith a "Bird" ]
+
+[title a| a<-filter (\a->startWith a "Bird") authors ]
+
+map title (filter (\a->startWith a "Bird") authors )
+
+
+concatMap (\b->map title (filter (\a->startWith a "Bird") (authors b))) books
+
+
+[s1 | as<-bs, c<-as, r]
+<=>
+concatMap f bs
+    where f = [s1 | c<-as, r]
+
+
+[s1 | a<-bs, question, r]
+<=>
+[s1 | a<-filter question bs, r]
+
+
+[f a | a<-bs, r]
+<=>
+map f [a| a<-bs, r]
+
+
+[f a | a<-bs]
+<=>
+map f bs
+

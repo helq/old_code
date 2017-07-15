@@ -1,0 +1,89 @@
+     1                                  ;  Executable name : toLowerCase
+     2                                  ;  Version         : 0.1
+     3                                  ;  Created date    : 07/02/2012
+     4                                  ;  Last update     : 07/02/2012
+     5                                  ;  Author          : helq
+     6                                  ;  Description     : A simple program in assembly for Linux, using NASM 2.09.08,
+     7                                  ;    changing from Uppercase to Lowercase characters input from consola.
+     8                                  ;
+     9                                  ;  Build using these commands:
+    10                                  ;    nasm -f elf -g -F stabs toLowerCase.asm -l toLowerCase.lst
+    11                                  ;    ld -m elf_i386 -o toLowerCase toLowerCase.o
+    12                                  ;
+    13                                  
+    14                                  ; Use -dDEBUG option
+    15                                  %macro nopDebug 0
+    16                                  	%ifdef DEBUG 
+    17                                  		nop
+    18                                  	%endif
+    19                                  %endmacro
+    20                                  
+    21                                  ; ==================   PRINT   ==================
+    22                                  %macro PutStr 2
+    23                                  	mov eax,0x4                ; Specify sys_write call
+    24                                  	mov ebx,0x1                ; Specify File Descriptor 1: Standard Output
+    25                                  	mov ecx,%1                 ; Pass offset of the message
+    26                                  	mov edx,%2                 ; Pass the length of the message
+    27                                  	int 0x80                   ; Make kernel call
+    28                                  %endmacro
+    29                                  
+    30                                  ; ==================   INPUT   ==================
+    31                                  %macro GetStr 2
+    32                                  	mov eax,0x4                ; Specify sys_write call
+    33                                  	mov ebx,0x0                ; Specify File Descriptor 0: Standard Input
+    34                                  	mov ecx,%1                 ; Pass offset of the message
+    35                                  	mov edx,%2                 ; Pass the length of the message
+    36                                  	int 0x80                   ; Make kernel call
+    37                                  %endmacro
+    38                                  
+    39                                  SECTION .data
+    40                                  
+    41                                  SECTION .bss
+    42                                  
+    43 00000000 <res 00000100>          	String       resb 100H
+    44                                  	StringLen    equ $-String
+    45                                  
+    46                                  SECTION .text
+    47                                  
+    48                                  global _start
+    49                                  
+    50                                  _start:
+    51                                  	nopDebug
+    52                              <1>  %ifdef DEBUG
+    53                              <1>  nop
+    54                              <1>  %endif
+    55                                  
+    56                                  	GetStr String,StringLen
+    57 00000000 B804000000          <1>  mov eax,0x4
+    58 00000005 BB00000000          <1>  mov ebx,0x0
+    59 0000000A B9[00000000]        <1>  mov ecx,%1
+    60 0000000F BA00010000          <1>  mov edx,%2
+    61 00000014 CD80                <1>  int 0x80
+    62                                  
+    63                                  ; ==================   UPER TO LOWER CASE   ==================
+    64 00000016 B900010000              	mov ecx,StringLen          ; Length of String in Counter Register
+    65 0000001B B8[00000000]            	mov eax,String             ; Offset of String in eax
+    66                                  
+    67                                  	loop1:                     ; Trough a String
+    68 00000020 8A18                    		mov bl,[eax]               ; IF
+    69 00000022 80FB40                  		 cmp bl,0x40               ;    char => 0x41
+    70 00000025 7E08                    		 jng nothing               ;            "A"
+    71 00000027 80FB5B                  		 cmp bl,0x5b               ;    char <= 0x5a
+    72 0000002A 7D03                    		 jnl nothing               ;            "Z"
+    73                                               ;                     ; THEN
+    74 0000002C 800020                  			add [eax],byte 0x20        ; Do character: Upper to Lower case
+    75                                  		nothing:                   ; FI
+    76 0000002F 40                      		inc eax                    ; Move to next character
+    77 00000030 E2EE                    	loop loop1
+    78                                  
+    79                                  	PutStr String,StringLen
+    80 00000032 B804000000          <1>  mov eax,0x4
+    81 00000037 BB01000000          <1>  mov ebx,0x1
+    82 0000003C B9[00000000]        <1>  mov ecx,%1
+    83 00000041 BA00010000          <1>  mov edx,%2
+    84 00000046 CD80                <1>  int 0x80
+    85                                  
+    86                                  ; ==================   EXIT   ==================
+    87 00000048 B801000000              	mov eax,0x1                ; Code for Exit Syscall
+    88 0000004D BB00000000              	mov ebx,0x0                ; Return a code of zero
+    89 00000052 CD80                    	int 0x80                   ; Make kernel call
