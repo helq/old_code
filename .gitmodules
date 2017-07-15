@@ -1,0 +1,27 @@
+[submodule "languajes-learning/Haskell/Excercises/HuffmanCode"]
+  path = languajes-learning/Haskell/Excercises/HuffmanCode
+  url  = git@github.com:helq/HuffmanCode.git
+
+[submodule "languajes-learning/Haskell/Excercises/PrimesAndDivisors"]
+  path = languajes-learning/Haskell/Excercises/PrimesAndDivisors
+  url  =git@github.com:helq/prime-library-haskell.git
+
+[submodule "languajes-learning/Haskell/Excercises/Bloxorz"]
+  path = languajes-learning/Haskell/Excercises/Bloxorz
+  url  =git@github.com:helq/bloxorz-haskell.git
+
+[submodule "languajes-learning/Haskell/Excercises/PrintListInBox"]
+  path = languajes-learning/Haskell/Excercises/PrintListInBox
+  url  =git@github.com:helq/pretty-print-2DLists-haskell.git
+
+[submodule "languajes-learning/python/mazes/try2"]
+  path = languajes-learning/python/mazes/try2
+  url  =git@github.com:helq/shortest-path_genetic-algorithm.git
+
+[submodule "mini-interpreters/simple-interpreter"]
+  path = mini-interpreters/simple-interpreter
+  url  =git@github.com:helq/simple-interpreter.git
+
+[submodule "mini-interpreters/lambda_grammar"]
+  path = mini-interpreters/lambda_grammar
+  url  =git@github.com:helq/ILLA.git
