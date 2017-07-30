@@ -2,12 +2,13 @@
 // by: Gadelan
 // from: http://elmanantialdebits.blogspot.com/2011/10/el-combinador-y-en-c-y-ii.html
 
+// NOLINT(legal/copyright)
 #include <functional>
 #include <iostream>
 
 // F(X,Y) es X->Y
 #define F(X,Y) std::function<Y(X)>
- 
+
 
 // F(X,Y,Z) es (X,Y)->Z
 #define F2(X,Y,Z) std::function<Z(X,Y)>
