@@ -8,11 +8,11 @@ It runs with [chicken scheme][] and it requires the egg [chicken scheme][].
 How to install:
 
 ```
-mkdir -p ~/chiken-scm-eggs
-chicken-install -init ~/chiken-scm-eggs
-export CHICKEN_REPOSITORY=~/chiken-scm-eggs
+mkdir -p ./chiken-scm-eggs
+chicken-install -init ./chiken-scm-eggs
+export CHICKEN_REPOSITORY="${PWD}/chiken-scm-eggs"
 chicken-install low-level-macros
 ```
 
-How to run. Run `csi`, load miniKanren `(load "lib/microKanren")`, and copy&paste things
-from `playing.scm`.
+How to run. Run `csi`, load miniKanren `(load "playing.scm")`, and play with
+the definitions from `playing.scm`.
