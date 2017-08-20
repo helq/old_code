@@ -742,3 +742,75 @@
  |    (fresh (x)
  |      (*o x r (build-num 24)))))
  |#
+
+; ok, I stopped to follow the chapter here because I think I know how it is
+; gonna unfold, it is going to define many operations with numbers and
+; efficient implementations (so miniKanren doesn't expend an eternity in a
+; simple problem), which is pretty annoying. Usually the first implementation,
+; doesn't work well, nor does the second, and so on, it makes to write good
+; code in miniKanren very very difficult and time consuming. We shouldn't care
+; too much on the speed of an implementation, unless it is the core of a system
+; we build, but it should be the last of our concerns, not the first when
+; writting functional code
+; yeah, rambling here, sorry
+
+; === chapter 9 ===
+
+(run* (q)
+  (disj (== q #t)
+        (disj (== q 3) (== 5 5))))
+; same as (*)
+(map reify-1st
+  (take-all
+    (call/goal
+      (fresh (q)
+        (disj (== q #t) (disj (== q 3) (== 5 5)))))))
+
+; each part
+((call/goal
+  (fresh (q)
+    (disj (== q #t) (disj (== q 3) (== 5 5))))))
+
+; same as
+((call/goal
+  (call/fresh
+    (lambda (q)
+      (disj (== q #t) (disj (== q 3) (== 5 5)))))))
+
+; and same as
+(pull
+  (call/goal
+    (call/fresh
+      (lambda (q)
+        (disj (== q #t) (disj (== q 3) (== 5 5)))))))
+
+; or
+(pull (pull
+  (call/goal
+    (call/fresh
+      (lambda (q)
+        (disj (== q #t) (disj (== q 3) (== 5 5))))))))
+; pull applies a function (procedure), if it is not a procedure it returns it
+
+(pull 5)
+(pull (lambda () 5))
+(pull (lambda () (lambda () 5)))
+
+;
+(define testing
+  (call/goal    ; <- the magic happens when calling call/goal, but the whole process
+    (call/fresh ;    is performed by ==, remember that (== a b) returns a procedure
+      (lambda (q)  ; and it's here when it gets called and unifies the values of the variables
+        (disj (== q #t) (disj (== q 3) (== 5 5)))))))
+
+(car testing)
+(cdr testing)
+
+; following the process of (*)
+(takel-all testing) ; doesn't do much in this case, this is for when there are still things procedures to execute
+
+(map reify-1st testing) ; gotcha, this transforms the internal representation (miniKanren) into something we understand better
+(cadr testing)
+(reify-1st (cadr testing)) ; walk* is called here, let's examing what walk* does, let's follow the book
+
+; book chapter 9
