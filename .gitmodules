@@ -25,3 +25,9 @@
 [submodule "mini-interpreters/lambda_grammar"]
   path = mini-interpreters/lambda_grammar
   url  =git@gitlab.com:helq/ILLA.git
+[submodule "languajes-learning/Haskell/languajes-learning/Haskell/practice-learning code"]
+	path = languajes-learning/Haskell/languajes-learning/Haskell/practice-learning code
+	url = git@github.com:helq/haskell-practice.git
+[submodule "languajes-learning/Haskell/tensorflow-haskell-deptyped"]
+	path = languajes-learning/Haskell/tensorflow-haskell-deptyped
+	url = git@github.com:helq/tensorflow-haskell-deptyped.git
