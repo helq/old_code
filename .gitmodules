@@ -1,33 +1,30 @@
-[submodule "languajes-learning/Haskell/Excercises/HuffmanCode"]
-  path = languajes-learning/Haskell/Excercises/HuffmanCode
+[submodule "proglangs-learning/Haskell/Excercises/HuffmanCode"]
+  path = proglangs-learning/Haskell/Excercises/HuffmanCode
   url  = git@gitlab.com:helq/HuffmanCode.git
-
-[submodule "languajes-learning/Haskell/Excercises/PrimesAndDivisors"]
-  path = languajes-learning/Haskell/Excercises/PrimesAndDivisors
-  url  =git@gitlab.com:helq/prime-library-haskell.git
-
-[submodule "languajes-learning/Haskell/Excercises/Bloxorz"]
-  path = languajes-learning/Haskell/Excercises/Bloxorz
-  url  =git@gitlab.com:helq/bloxorz-haskell.git
-
-[submodule "languajes-learning/Haskell/Excercises/PrintListInBox"]
-  path = languajes-learning/Haskell/Excercises/PrintListInBox
-  url  =git@gitlab.com:helq/pretty-print-2DLists-haskell.git
-
-[submodule "languajes-learning/python/mazes/try2"]
-  path = languajes-learning/python/mazes/try2
-  url  =git@gitlab.com:helq/shortest-path_genetic-algorithm.git
-
+[submodule "proglangs-learning/Haskell/Excercises/PrimesAndDivisors"]
+  path = proglangs-learning/Haskell/Excercises/PrimesAndDivisors
+  url  = git@gitlab.com:helq/prime-library-haskell.git
+[submodule "proglangs-learning/Haskell/Excercises/Bloxorz"]
+  path = proglangs-learning/Haskell/Excercises/Bloxorz
+  url  = git@gitlab.com:helq/bloxorz-haskell.git
+[submodule "proglangs-learning/Haskell/Excercises/PrintListInBox"]
+  path = proglangs-learning/Haskell/Excercises/PrintListInBox
+  url  = git@gitlab.com:helq/pretty-print-2DLists-haskell.git
+[submodule "proglangs-learning/python/mazes/try2"]
+  path = proglangs-learning/python/mazes/try2
+  url  = git@gitlab.com:helq/shortest-path_genetic-algorithm.git
 [submodule "mini-interpreters/simple-interpreter"]
   path = mini-interpreters/simple-interpreter
-  url  =git@gitlab.com:helq/simple-interpreter.git
-
+  url  = git@gitlab.com:helq/simple-interpreter.git
 [submodule "mini-interpreters/lambda_grammar"]
   path = mini-interpreters/lambda_grammar
-  url  =git@gitlab.com:helq/ILLA.git
-[submodule "languajes-learning/Haskell/languajes-learning/Haskell/practice-learning code"]
-	path = languajes-learning/Haskell/languajes-learning/Haskell/practice-learning code
+  url  = git@gitlab.com:helq/ILLA.git
+[submodule "proglangs-learning/Haskell/practice-learning code"]
+	path = proglangs-learning/Haskell/practice-learning code
 	url = git@github.com:helq/haskell-practice.git
-[submodule "languajes-learning/Haskell/tensorflow-haskell-deptyped"]
-	path = languajes-learning/Haskell/tensorflow-haskell-deptyped
+[submodule "proglangs-learning/Agda/plfa.github.io"]
+	path = proglangs-learning/Agda/plfa.github.io
+	url = git@github.com:plfa/plfa.github.io
+[submodule "tensorflow-haskell-deptyped"]
+	path = tensorflow-haskell-deptyped
 	url = git@github.com:helq/tensorflow-haskell-deptyped.git

@@ -1,0 +1,30 @@
+resolver: lts-13.13
+
+packages:
+  - '.'
+  - 'tensorflow-mnist-deptyped'
+extra-deps:
+  - git: https://github.com/tensorflow/haskell.git
+    commit: 26eebce98f1e5fc924c5141fbe3f400f8f0cfde8
+    subdirs:
+      - tensorflow
+      - tensorflow-core-ops
+      - tensorflow-mnist-input-data
+      - tensorflow-opgen
+      - tensorflow-ops
+      - tensorflow-proto
+  - haskell-src-exts-1.21.0
+  - proto-lens-0.4.0.1
+  - proto-lens-protobuf-types-0.4.0.1
+  - proto-lens-runtime-0.4.0.2
+  - proto-lens-setup-0.4.0.2
+  - lens-labels-0.3.0.1
+  - proto-lens-protoc-0.4.0.2
+  - snappy-0.2.0.2
+  - snappy-framing-0.1.1
+
+# Override default flag values for local packages and extra-deps
+flags: {}
+
+# Extra package databases containing global packages
+extra-package-dbs: []
