@@ -1,0 +1,4 @@
+-- Task:
+-- Try to compile a function that requires a proof as input.
+-- It should be similar to what exportSqrt does in the ℝ but
+-- for Nats (ℕ)

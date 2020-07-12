@@ -1,9 +1,9 @@
 module plfa-exercises.part1.Decidable where
 
 import Relation.Binary.PropositionalEquality as Eq
-open Eq using (_≡_; refl)
+open Eq using (_≡_; refl; sym; cong)
 open Eq.≡-Reasoning
-open import Data.Nat using (ℕ; zero; suc)
+open import Data.Nat using (ℕ; zero; suc; pred)
 open import Data.Product using (_×_) renaming (_,_ to ⟨_,_⟩)
 open import Data.Sum using (_⊎_; inj₁; inj₂)
 open import Relation.Nullary using (¬_)
@@ -13,6 +13,7 @@ open import Data.Unit using (⊤; tt)
 open import Data.Empty using (⊥; ⊥-elim)
 open import plfa.part1.Relations using (_<_; z<s; s<s)
 open import plfa.part1.Isomorphism using (_⇔_)
+open import Function.Base using (_∘_)
 
 infix 4 _≤_
 
@@ -151,4 +152,94 @@ _ : 2 ≤ 4
 _ = toWitness {_} {2 ≤? 4} tt
 
 ¬4≤2₃ : ¬ (4 ≤ 2)
-¬4≤2₃ = fromWitness {D = 4 ≤? 2}
+--¬4≤2₃ = fromWitness {D = 4 ≤? 2}
+¬4≤2₃ = fromWitness {_} {4 ≤? 2}
+
+¬z<z : ¬ (zero < zero)
+¬z<z ()
+
+¬s<z : ∀ {m : ℕ} → ¬ (suc m < zero)
+¬s<z ()
+
+_<?_ : ∀ (m n : ℕ) → Dec (m < n)
+zero <? zero = no ¬z<z
+zero <? suc n = yes z<s
+suc m <? zero = no ¬s<z
+suc m <? suc n with m <? n
+...               | yes m<n = yes (s<s m<n)
+...               | no ¬m<n = no λ{(s<s m<n) → ¬m<n m<n}
+
+_ : ⌊ 2 <? 4 ⌋ ≡ true
+_ = refl
+
+¬z≡sn : ∀ {n : ℕ} → ¬ zero ≡ suc n
+¬z≡sn ()
+
+_≡ℕ?_ : ∀ (m n : ℕ) → Dec (m ≡ n)
+zero    ≡ℕ? zero    = yes refl
+zero    ≡ℕ? (suc n) = no ¬z≡sn
+--(suc m) ≡ℕ? zero    = no (λ{sn≡z → ¬z≡sn (sym sn≡z)})
+--(suc m) ≡ℕ? zero    = no (¬z≡sn ∘ sym)
+(suc m) ≡ℕ? zero    = no ((λ()) ∘ sym)
+--The following doesn't work though
+--(suc m) ≡ℕ? zero    with zero ≡ℕ? (suc m)
+--...                 | yes  z≡sm = yes (sym z≡sm)
+--...                 | no  ¬z≡sm = no (¬z≡sm ∘ sym)
+(suc m) ≡ℕ? (suc n) with m ≡ℕ? n
+...               | yes m≡n = yes (cong suc m≡n)
+...               | no ¬m≡n = no  (¬m≡n ∘ (cong pred))
+
+
+infixr 6 _×-dec_
+
+_×-dec_ : ∀ {A B : Set} → Dec A → Dec B → Dec (A × B)
+yes x ×-dec yes y = yes ⟨ x , y ⟩
+no ¬x ×-dec _     = no λ{ ⟨ x , y ⟩ → ¬x x }
+_     ×-dec no ¬y = no λ{ ⟨ x , y ⟩ → ¬y y }
+
+infixr 6 _⊎-dec_
+
+_⊎-dec_ : ∀ {A B : Set} → Dec A → Dec B → Dec (A ⊎ B)
+yes x ⊎-dec _     = yes (inj₁ x)
+_     ⊎-dec yes y = yes (inj₂ y)
+no ¬x ⊎-dec no ¬y = no λ{(inj₁ x) → ¬x x; (inj₂ y) → ¬y y}
+
+¬? : ∀ {A : Set} → Dec A → Dec (¬ A)
+¬? (yes x) = no (¬¬-intro x)
+¬? (no ¬x) = yes ¬x
+
+_→-dec_ : ∀ {A B : Set} → Dec A → Dec B → Dec (A → B)
+_     →-dec yes y = yes (λ _ → y)
+--no ¬x →-dec _     = yes ((λ()) ∘ ¬x)
+no ¬x →-dec _     = yes (⊥-elim ∘ ¬x)
+yes x →-dec no ¬y = no (λ{x→y → ¬y (x→y x)})
+
+
+infixr 6 _∧_
+
+_∧_ : Bool → Bool → Bool
+true  ∧ true  = true
+false ∧ _     = false
+_     ∧ false = false
+
+∧-× : ∀ {A B : Set} (x : Dec A) (y : Dec B) → ⌊ x ⌋ ∧ ⌊ y ⌋ ≡ ⌊ x ×-dec y ⌋
+∧-× (yes x) (yes y) = refl
+∧-× (no ¬x) _       = refl
+∧-× (yes x) (no ¬y) = refl
+
+_iff_ : Bool → Bool → Bool
+true  iff true  = true
+false iff false = true
+_     iff _     = false
+
+_⇔-dec_ : ∀ {A B : Set} → Dec A → Dec B → Dec (A ⇔ B)
+yes x ⇔-dec yes y = yes (record { from = λ{_ → x} ; to = λ{_ → y} })
+no ¬x ⇔-dec no ¬y = yes (record { from = (λ()) ∘ ¬y ; to = (λ()) ∘ ¬x })
+yes x ⇔-dec no ¬y = no (λ x⇔y → ¬y (_⇔_.to   x⇔y x))
+no ¬x ⇔-dec yes y = no (λ x⇔y → ¬x (_⇔_.from x⇔y y))
+
+iff-⇔ : ∀ {A B : Set} (x : Dec A) (y : Dec B) → ⌊ x ⌋ iff ⌊ y ⌋ ≡ ⌊ x ⇔-dec y ⌋
+iff-⇔ (yes x) (yes y) = refl
+iff-⇔ (no ¬x) (no ¬y) = refl
+iff-⇔ (no ¬x) (yes y) = refl
+iff-⇔ (yes x) (no ¬y) = refl

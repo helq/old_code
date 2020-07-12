@@ -12,16 +12,23 @@ seven : ℕ
 seven = suc (suc (suc (suc (suc (suc (suc zero))))))
 --seven′ = --7
 
+pred : ℕ → ℕ
+pred zero = zero
+pred (suc n) = n
+
 ---
 
 -- Gives us the power of writing 3 to signify suc (suc (suc zero)) :)
 {-# BUILTIN NATURAL ℕ #-}
 
 import Relation.Binary.PropositionalEquality as Eq
-open import Function.Base using (flip)
 open Eq using (_≡_; _≢_; refl; cong; sym; trans)
 open Eq.≡-Reasoning using (begin_; _≡⟨⟩_; _≡⟨_⟩_; _∎)
+open import Function.Base using (flip)
 open import Relation.Nullary using (¬_)
+open import Data.Empty using (⊥; ⊥-elim)
+open import Data.Product using (_×_; ∃-syntax) renaming (_,_ to ⟨_,_⟩)
+open import Data.Sum using (_⊎_; inj₁; inj₂)
 
 _+_ : ℕ → ℕ → ℕ
 zero + n = n                -- +-def₀
@@ -656,11 +663,11 @@ data _<_ : ℕ → ℕ → Set where
 <-trans z<s       (s<s n<p) = z<s
 <-trans (s<s m<n) (s<s n<p) = s<s (<-trans m<n n<p)
 
-tricotomy : ∀ (m n) → (m ≡ n) ⊎ (m < n) ⊎ (n < m)
-tricotomy zero    zero    = inj₁ refl
-tricotomy zero    (suc n) = inj₂ (inj₁ z<s)
-tricotomy (suc m) zero    = inj₂ (inj₂ z<s)
-tricotomy (suc m) (suc n) with tricotomy m n
+trichotomy : ∀ (m n) → (m ≡ n) ⊎ (m < n) ⊎ (n < m)
+trichotomy zero    zero    = inj₁ refl
+trichotomy zero    (suc n) = inj₂ (inj₁ z<s)
+trichotomy (suc m) zero    = inj₂ (inj₂ z<s)
+trichotomy (suc m) (suc n) with trichotomy m n
 ...                       | inj₁ m≡n        = inj₁ (cong suc m≡n)
 ...                       | inj₂ (inj₁ m<n) = inj₂ (inj₁ (s<s m<n))
 ...                       | inj₂ (inj₂ n<m) = inj₂ (inj₂ (s<s n<m))
@@ -674,6 +681,78 @@ tricotomy (suc m) (suc n) with tricotomy m n
 
 +-mono-< : ∀ {m n p q} → m < n → p < q → (m + p) < (n + q)
 +-mono-< m<n p<q = <-trans (+-monoˡ-< m<n) (+-monoʳ-< p<q)
+
+-- From Software Verification Class (nice exercises but the two first are
+-- unnecessary in Agda because the proofs are basically the relation
+-- definition)
+≡0 : ∀ {n : ℕ} → ¬( 0 < n ) → n ≡ 0
+≡0 {zero}  _    = refl
+≡0 {suc n} ¬0<n = ⊥-elim (¬0<n z<s)
+
+--0< : ∀ {n : ℕ} → n ≢ 0 → 0 < n
+0< : ∀ {n : ℕ} → ¬( n ≡ 0 ) → 0 < n
+0< {zero} 0≢0 = ⊥-elim (0≢0 refl)
+0< {suc n} s≢0 = z<s
+
+¬n<z : ∀ {n : ℕ} → ¬( n < 0 )
+¬n<z ()
+
+m<sn→m<n⊎m≡n : {m n : ℕ} → (m < suc n) → (m < n) ⊎ (m ≡ n)
+m<sn→m<n⊎m≡n {zero}  {zero}  _ = inj₂ refl
+m<sn→m<n⊎m≡n {zero}  {suc n} _ = inj₁ z<s
+m<sn→m<n⊎m≡n {suc m} {zero}  (s<s ())
+m<sn→m<n⊎m≡n {suc m} {suc n} (s<s m<sn) with m<sn→m<n⊎m≡n {m} {n} m<sn
+...                 | inj₁ m<n = inj₁ (s<s m<n)
+...                 | inj₂ m≡n = inj₂ (cong suc m≡n)
+
+suc-step : {m n : ℕ} → (m < suc n) × (m ≢ n) → m < n
+suc-step {zero}  {zero}  ⟨ 0<1      , 0≢0   ⟩ = 0< 0≢0
+suc-step {zero}  {suc n} ⟨ 0<ssn    , 0≢sn  ⟩ = z<s
+suc-step {suc m} {zero}  ⟨ s<s m<0  , sm≢0  ⟩ = ⊥-elim (¬n<z m<0)
+suc-step {suc m} {suc n} ⟨ s<s m<sn , sm≢sn ⟩ with m<sn→m<n⊎m≡n m<sn
+...                 | inj₁ m<n = s<s m<n
+...                 | inj₂ m≡n = ⊥-elim (sm≢sn (cong suc m≡n))
+
+-- This idea of using returning ∃ in Athena might be fundamental but it is
+-- clumsy or cumbersome in Agda
+discrete : ∀ {n : ℕ} → ¬ (∃[ m ] (n < m × m < suc n))
+discrete {zero}  ⟨ _     , ⟨ z<s , s<s () ⟩ ⟩
+discrete {suc n} ⟨ zero  , ⟨ ()  , _      ⟩ ⟩
+discrete {suc n} ⟨ suc m , ⟨ s<s n<m , s<s m<sn ⟩ ⟩ = discrete ⟨ m , ⟨ n<m , m<sn ⟩ ⟩
+
+-- This is unnecessary because it is the same as pred n
+-- proj₁ (S4 {_} {n} _) ≡ pred n
+--S4 : ∀ {m n : ℕ} → suc m < n → ∃[ n' ] ( n ≡ suc n' )
+S4 : ∀ {m n : ℕ} → m < n → ∃[ n' ] ( n ≡ suc n' )
+S4 {_} {zero} ()
+S4 {_} {suc n} _ = ⟨ n , refl ⟩
+
+-- more interesting is:
+S4' : ∀ {m n : ℕ} → suc m ≤ n → ∃[ n' ] ( n ≡ suc n' )
+S4' {_} {zero} ()
+S4' {_} {suc n} _ = ⟨ n , refl ⟩
+-- It is more interesting because, this is not true:
+-- S4' : ∀ {m n : ℕ} → m ≤ n → ∃[ n' ] ( n ≡ suc n' )
+-- as opposed to S4.
+-- But still, it's something that isn't necessary in Agda
+
+irreflexive : ∀ {m : ℕ} → ¬(m < m)
+irreflexive {zero} ()
+irreflexive {suc m} (s<s m<m) = irreflexive m<m
+
+trichotomy₂ : ∀ (m n) → (m ≡ n × ¬(m < n) × ¬(n < m))
+                      ⊎ (m < n ×   m ≢ n  × ¬(n < m))
+                      ⊎ (n < m ×   m ≢ n  × ¬(m < n))
+trichotomy₂ zero    zero    = inj₁ ⟨ refl , ⟨ irreflexive , irreflexive ⟩ ⟩
+trichotomy₂ zero    (suc n) = inj₂ (inj₁ ⟨ z<s , ⟨ (λ()) , (λ()) ⟩ ⟩)
+trichotomy₂ (suc m) zero    = inj₂ (inj₂ ⟨ z<s , ⟨ (λ()) , (λ()) ⟩ ⟩)
+trichotomy₂ (suc m) (suc n) with trichotomy₂ m n
+...                       | inj₁ ⟨ m≡n , ⟨ ¬m<n , ¬n<m ⟩ ⟩ =
+      inj₁ ⟨ cong suc m≡n , ⟨ (λ{(s<s m<n) → ¬m<n m<n}) , (λ{(s<s n<m) → ¬n<m n<m}) ⟩ ⟩
+...                       | inj₂ (inj₁ ⟨ m<n , ⟨ m≢n , ¬n<m ⟩ ⟩) =
+      inj₂ (inj₁ ⟨ s<s m<n , ⟨ (λ{sm≡sn → m≢n (cong pred sm≡sn)}) , (λ{(s<s n<m) → ¬n<m n<m}) ⟩ ⟩)
+...                       | inj₂ (inj₂ ⟨ n<m , ⟨ m≢n , ¬m<n ⟩ ⟩) =
+      inj₂ (inj₂ ⟨ s<s n<m , ⟨ (λ{sm≡sn → m≢n (cong pred sm≡sn)}) , (λ{(s<s m<n) → ¬m<n m<n}) ⟩ ⟩)
 
 --open import Function.Equivalence using (_⇔_)
 record _⇔_ (A B : Set) : Set where
@@ -798,10 +877,6 @@ open ≤-Reasoning
   ≤⟨⟩
     suc n + q
   ∎≤
-
-pred : ℕ → ℕ
-pred zero = zero
-pred (suc n) = n
 
 pred≡ : ∀ {m n : ℕ} → suc m ≡ suc n → m ≡ n
 pred≡ = cong pred
@@ -988,19 +1063,20 @@ fromᵈᶜ (num b _) = fromᵇ b
 ----    num b cb
 ----  ∎
 
-ℕ≃Can : ℕ ≃ Dec-Can
-ℕ≃Can =
-  record
-  { to      = toᵈᶜ
-  ; from    = fromᵈᶜ
-  ; from∘to = from∘toᵇ
-  ; to∘from = ? -- to∘fromᵈᶜ -- to∘from-Can
-  }
+--ℕ≃Can : ℕ ≃ Dec-Can
+--ℕ≃Can =
+--  record
+--  { to      = toᵈᶜ
+--  ; from    = fromᵈᶜ
+--  ; from∘to = from∘toᵇ
+--  ; to∘from = ? -- to∘fromᵈᶜ -- to∘from-Can
+--  }
 
 --num (zero-C)
 
 --------------------------------------- Decidable ---------------------------------------
 -- Use `Dec` to create elements for `Can`. Look if this is enough to prove `ℕ ≃ Can`
+-- Ans: NO. Decidables don't do what you thought they do
 
 --------------------------------------- Last ---------------------------------------
 -- Prove that `sqrt 2` is irrational

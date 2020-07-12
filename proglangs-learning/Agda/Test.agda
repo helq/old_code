@@ -1,6 +1,7 @@
 module Test where
 
--- To compile code: agda Test.agda -c --ghc-flag=-dynamic
+-- To compile code: stack exec -- agda Test.agda -c
+-- or: agda Test.agda -c --ghc-flag=-dynamic
 open import IO
 
 -- All of these are not necessary but they help to reduce clutter when looking
